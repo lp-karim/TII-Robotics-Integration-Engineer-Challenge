@@ -13,6 +13,15 @@ RUN apt-get update && apt-get install -y \
     ros-noetic-tf2-eigen \
     && rm -rf /var/lib/apt/lists/*
 
+# Add X11 dependencies
+RUN apt-get update && apt-get install -y \
+    libx11-dev \
+    x11-xserver-utils \
+    libgl1-mesa-glx \
+    libgl1-mesa-dri \
+    libqt5widgets5 \
+    && rm -rf /var/lib/apt/lists/*
+
 # Set up workspace
 WORKDIR /root/catkin_ws/src
 RUN /bin/bash -c "source /opt/ros/noetic/setup.bash && catkin_init_workspace"
