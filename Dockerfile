@@ -34,13 +34,16 @@ RUN apt-get update && apt-get install -y \
 WORKDIR /root/catkin_ws/src
 RUN /bin/bash -c "source /opt/ros/noetic/setup.bash && catkin_init_workspace"
 
-# Copy the current directory into the container at /src
+# Copy the current directory into the container at /root/catkin_ws/src
 COPY . /root/catkin_ws/src/
 
 # Build the catkin workspace
 WORKDIR /root/catkin_ws
 RUN /bin/bash -c "source /opt/ros/noetic/setup.bash && catkin_make"
 
+# Copy the entrypoint script
+COPY entrypoint.sh /root/entrypoint.sh
+RUN chmod +x /root/entrypoint.sh
+
 # Set up the entrypoint
-ENTRYPOINT ["/ros_entrypoint.sh"]
-CMD ["bash"]
+ENTRYPOINT ["/root/entrypoint.sh"]
