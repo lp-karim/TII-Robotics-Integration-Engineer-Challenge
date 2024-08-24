@@ -79,4 +79,21 @@ private:
         // publish the control cmd
         cmd_pub_.publish(cmd);
     }
+    
+    geometry_msgs::PoseStamped getLookaheadPoint() {
+        geometry_msgs::PoseStamped lookahead_point;
+        double min_distance = std::numeric_limits<double>::max();
+
+        for (const auto& pose : path_.poses){
+            double distance = std::hypot(
+                pose.pose.position.x - current_pose_.position.x,
+                pose.pose.position.y - current_pose_.position.y
+            );
+            if (distance > lookahead_distance_ && distance < min_distance){
+                min_distance = distance;
+                lookahead_point = pose;
+            }
+        }
+        return lookahead_point;
+    }
 };
