@@ -1,0 +1,7 @@
+<launch>
+    <!-- Load parameters from a YAML file -->
+    <rosparam file="$(find pure_pursuit_controller)/config/pure_pursuit_params.yaml" command="load" />
+
+    <!-- Start the Pure Pursuit controller node -->
+    <node name="pure_pursuit_controller" pkg="pure_pursuit_controller" type="pure_pursuit_controller_node" output="screen" />
+</launch>
