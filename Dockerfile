@@ -11,6 +11,14 @@ RUN apt-get update && apt-get install -y \
     ros-noetic-geometry-msgs \
     ros-noetic-tf2-ros \
     ros-noetic-tf2-eigen \
+    ros-noetic-ackermann-msgs \ 
+    ros-noetic-geometry2 \
+    ros-noetic-hector-gazebo \ 
+    ros-noetic-hector-models \
+    ros-noetic-jsk-rviz-plugins \
+    ros-noetic-ros-control \ 
+    ros-noetic-ros-controllers \ 
+    ros-noetic-velodyne-simulator \
     && rm -rf /var/lib/apt/lists/*
 
 # Add X11 dependencies

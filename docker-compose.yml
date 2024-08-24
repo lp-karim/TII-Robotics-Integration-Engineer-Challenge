@@ -1,5 +1,3 @@
-version: '3.8'
-
 services:
   dev:
     build: .
@@ -17,44 +15,44 @@ services:
       - /dev/dri:/dev/dri
     command: bash -c "source /opt/ros/noetic/setup.bash && catkin_make && bash"
 
-  gazebo:
-    image: osrf/ros:noetic-desktop-full
-    environment:
-      - DISPLAY=:1
-      - QT_X11_NO_MITSHM=1
-    network_mode: host
-    container_name: gazebo
-    privileged: true
-    # runtime: nvidia  # Only needed if you're using NVIDIA GPUs
-    devices:
-      - /dev/dri:/dev/dri
-    volumes:
-      - .:/root/catkin_ws/src
-    command: bash -c "source /opt/ros/noetic/setup.bash && roslaunch gazebo_ros empty_world.launch"
+  # gazebo:
+  #   image: osrf/ros:noetic-desktop-full
+  #   environment:
+  #     - DISPLAY=:1
+  #     - QT_X11_NO_MITSHM=1
+  #   network_mode: host
+  #   container_name: gazebo
+  #   privileged: true
+  #   # runtime: nvidia  # Only needed if you're using NVIDIA GPUs
+  #   devices:
+  #     - /dev/dri:/dev/dri
+  #   volumes:
+  #     - .:/root/catkin_ws/src
+  #   command: bash -c "source /opt/ros/noetic/setup.bash && roslaunch gazebo_ros empty_world.launch"
 
-  rviz:
-    image: osrf/ros:noetic-desktop-full
-    environment:
-      - DISPLAY=:1
-      - QT_X11_NO_MITSHM=1
-    network_mode: host
-    container_name: rviz
-    privileged: true
-    # runtime: nvidia  # Only needed if you're using NVIDIA GPUs
-    devices:
-      - /dev/dri:/dev/dri
-    volumes:
-      - .:/root/catkin_ws/src
-    command: bash -c "source /opt/ros/noetic/setup.bash && rviz"
+  # rviz:
+  #   image: osrf/ros:noetic-desktop-full
+  #   environment:
+  #     - DISPLAY=:1
+  #     - QT_X11_NO_MITSHM=1
+  #   network_mode: host
+  #   container_name: rviz
+  #   privileged: true
+  #   # runtime: nvidia  # Only needed if you're using NVIDIA GPUs
+  #   devices:
+  #     - /dev/dri:/dev/dri
+  #   volumes:
+  #     - .:/root/catkin_ws/src
+  #   command: bash -c "source /opt/ros/noetic/setup.bash && rviz"
 
-  polaris_gem_e2:
-    image: osrf/ros:noetic-desktop-full
-    environment:
-      - DISPLAY=:1
-      - QT_X11_NO_MITSHM=1
-    network_mode: host
-    container_name: polaris_gem_e2
-    privileged: true
-    volumes:
-      - ./src/POLARIS_GEM_e2-main/:/root/catkin_ws/src/POLARIS_GEM_e2-main/
-    command: bash -c "source /opt/ros/noetic/setup.bash && roslaunch gem_gazebo gem_gazebo_rviz.launch velodyne_points:="true""
+  # polaris_gem_e2:
+  #   image: osrf/ros:noetic-desktop-full
+  #   environment:
+  #     - DISPLAY=:1
+  #     - QT_X11_NO_MITSHM=1
+  #   network_mode: host
+  #   container_name: polaris_gem_e2
+  #   privileged: true
+  #   volumes:
+  #     - .:/root/catkin_ws/src
+  #   command: bash -c "source /opt/ros/noetic/setup.bash && roslaunch gem_gazebo gem_gazebo_rviz.launch velodyne_points:="true""
