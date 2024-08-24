@@ -19,6 +19,9 @@ RUN apt-get update && apt-get install -y \
     ros-noetic-ros-control \ 
     ros-noetic-ros-controllers \ 
     ros-noetic-velodyne-simulator \
+    ros-noetic-roscpp \
+    ros-noetic-std-msgs \ 
+    ros-noetic-tf2 \
     && rm -rf /var/lib/apt/lists/*
 
 # Add X11 dependencies
@@ -39,7 +42,7 @@ COPY . /root/catkin_ws/src/
 
 # Build the catkin workspace
 WORKDIR /root/catkin_ws
-RUN /bin/bash -c "source /opt/ros/noetic/setup.bash && catkin_make"
+RUN /bin/bash -c "source /opt/ros/noetic/setup.bash && catkin_make --make-args VERBOSE=1"
 
 # Copy the entrypoint script
 COPY entrypoint.sh /root/entrypoint.sh
