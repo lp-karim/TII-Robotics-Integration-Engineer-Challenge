@@ -22,7 +22,8 @@ if [ ! -f "$WORKSPACE_DIR/src/CMakeLists.txt" ]; then
 fi
 
 # Build the catkin workspace
-catkin_make
+# catkin_make
+catkin_make --make-args VERBOSE=1
 
 # Source the workspace setup
 source $WORKSPACE_DIR/devel/setup.bash
