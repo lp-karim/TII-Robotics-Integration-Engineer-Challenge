@@ -4,37 +4,41 @@ services:
     volumes:
       - .:/root/catkin_ws/src
     environment:
-      - DISPLAY=:1
+      - DISPLAY=${DISPLAY}
       - QT_X11_NO_MITSHM=1
       - ROS_MASTER_URI=http://localhost:11311
     network_mode: host
     container_name: ros_dev_container
     privileged: true
-    # runtime: nvidia  # Only needed if you're using NVIDIA GPUs
     devices:
       - /dev/dri:/dev/dri
-    command: bash -c "source /opt/ros/noetic/setup.bash && catkin_make && bash"
+    command: bash -c "source /opt/ros/noetic/setup.bash"
 
   # gazebo:
   #   image: osrf/ros:noetic-desktop-full
+  #   # build: .
   #   environment:
-  #     - DISPLAY=:1
+  #     - DISPLAY=${DISPLAY}
   #     - QT_X11_NO_MITSHM=1
+  #     - ROS_MASTER_URI=http://ros_dev_container:11311
+  #     - ROS_HOSTNAME=gazebo
   #   network_mode: host
   #   container_name: gazebo
   #   privileged: true
-  #   # runtime: nvidia  # Only needed if you're using NVIDIA GPUs
   #   devices:
   #     - /dev/dri:/dev/dri
   #   volumes:
   #     - .:/root/catkin_ws/src
-  #   command: bash -c "source /opt/ros/noetic/setup.bash && roslaunch gazebo_ros empty_world.launch"
+  #   command: tail -f /dev/null
+    # command: bash -c "source devel/setup.bash && roslaunch gem_gazebo gem_gazebo_rviz.launch velodyne_points:="true""
 
   # rviz:
   #   image: osrf/ros:noetic-desktop-full
   #   environment:
-  #     - DISPLAY=:1
+  #     - DISPLAY=${DISPLAY}
   #     - QT_X11_NO_MITSHM=1
+  #     - ROS_MASTER_URI=http://ros_dev_container:11311
+  #     - ROS_HOSTNAME=rviz
   #   network_mode: host
   #   container_name: rviz
   #   privileged: true
@@ -55,4 +59,4 @@ services:
   #   privileged: true
   #   volumes:
   #     - .:/root/catkin_ws/src
-  #   command: bash -c "source /opt/ros/noetic/setup.bash && roslaunch gem_gazebo gem_gazebo_rviz.launch velodyne_points:="true""
+  #   command: tail -f /dev/null
