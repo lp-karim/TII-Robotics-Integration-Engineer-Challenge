@@ -35,6 +35,6 @@ echo "Container is ready and running. You are now in the bash shell."
 
 # Start an interactive bash shell
 # exec bash
-source devel/setup.bash && roslaunch gem_gazebo gem_gazebo_rviz.launch velodyne_points:="true"
+# source devel/setup.bash && roslaunch gem_gazebo gem_gazebo_rviz.launch velodyne_points:="true"
 
 tail -f /dev/null   
