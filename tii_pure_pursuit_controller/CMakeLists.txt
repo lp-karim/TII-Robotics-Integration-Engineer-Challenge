@@ -11,6 +11,12 @@ find_package(catkin REQUIRED COMPONENTS
   tf2_ros
 )
 
+catkin_package(
+  INCLUDE_DIRS include
+  LIBRARIES ${PROJECT_NAME}
+  CATKIN_DEPENDS roscpp std_msgs nav_msgs geometry_msgs tf2 tf2_ros
+)
+
 # Specify additional locations of header files
 include_directories(
   include
@@ -31,4 +37,6 @@ target_link_libraries(${PROJECT_NAME}_node
 # Install targets
 install(TARGETS ${PROJECT_NAME}_node
   RUNTIME DESTINATION ${CATKIN_PACKAGE_BIN_DESTINATION}
+  ARCHIVE DESTINATION ${CATKIN_PACKAGE_LIB_DESTINATION}
+  LIBRARY DESTINATION ${CATKIN_PACKAGE_LIB_DESTINATION}
 )
