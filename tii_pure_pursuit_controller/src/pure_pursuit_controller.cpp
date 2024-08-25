@@ -41,6 +41,9 @@ void PurePursuitController::computeControlCommand() {
         return;
     }
 
+    // Dynamic adjustment of lookahead distance
+    double dynamic_lookahead_distance = adjustLookaheadDistance();
+
     // Find the closest point on the path to the current position
     geometry_msgs::PoseStamped target_pose = getLookaheadPoint();
 
@@ -55,7 +58,57 @@ void PurePursuitController::computeControlCommand() {
     cmd_vel.linear.x = linear_velocity;
     cmd_vel.angular.z = steering_angle;
     cmd_pub_.publish(cmd_vel);
+
+    // Log important data
+    ROS_INFO("Steering Angle: %f, Linear Velocity: %f, Angular Velocity: %f",
+             steering_angle, linear_velocity, cmd_vel.angular.z);
+    ROS_INFO("Dynamic Lookahead Distance: %f", dynamic_lookahead_distance);
 }
+
+// Function to adjust the lookahead distance based on speed or curvature
+double PurePursuitController::adjustLookaheadDistance() {
+    double current_speed = std::hypot(current_velocity_.linear.x, current_velocity_.linear.y);
+
+    // Select three consecutive points from the path (ensure they are available)
+    if (path_.poses.size() < 3) {
+        ROS_WARN("Not enough points to calculate curvature");
+        return lookahead_distance_;
+    }
+
+    // Calculate curvature using three consecutive points
+    double curvature = calculateCurvature(path_.poses[0], path_.poses[1], path_.poses[2]);
+
+    // Example: Reduce lookahead distance for higher curvature (sharper turns)
+    double dynamic_lookahead_distance = std::max(min_lookahead_distance_, 
+                                                 lookahead_distance_ / (1.0 + curvature_factor_ * curvature));
+
+    // Optionally, adjust based on speed as well
+    dynamic_lookahead_distance = std::max(min_lookahead_distance_, 
+                                          dynamic_lookahead_distance - speed_factor_ * current_speed);
+
+    return dynamic_lookahead_distance;
+}
+double PurePursuitController::calculateCurvature(const geometry_msgs::PoseStamped& pose1, 
+                                                 const geometry_msgs::PoseStamped& pose2, 
+                                                 const geometry_msgs::PoseStamped& pose3) {
+    // Extract the coordinates of the three points
+    double x1 = pose1.pose.position.x, y1 = pose1.pose.position.y;
+    double x2 = pose2.pose.position.x, y2 = pose2.pose.position.y;
+    double x3 = pose3.pose.position.x, y3 = pose3.pose.position.y;
+
+    // Calculate the area of the triangle formed by the points
+    double area = std::abs(0.5 * (x1*(y2 - y3) + x2*(y3 - y1) + x3*(y1 - y2)));
+
+    // Calculate the side lengths of the triangle
+    double d12 = std::hypot(x2 - x1, y2 - y1);
+    double d23 = std::hypot(x3 - x2, y3 - y2);
+    double d31 = std::hypot(x1 - x3, y1 - y3);
+
+    // Calculate the curvature
+    double curvature = 4 * area / (d12 * d23 * d31);
+    return curvature;
+}
+
 
 // Function to calculate the steering angle to the target lookahead point
 double PurePursuitController::calculateSteeringAngle(const geometry_msgs::PoseStamped& target_pose) {
@@ -72,6 +125,7 @@ double PurePursuitController::calculateSteeringAngle(const geometry_msgs::PoseSt
 
     double local_x = cos(yaw) * dx + sin(yaw) * dy;
     double local_y = -sin(yaw) * dx + cos(yaw) * dy;
+
 
     return 2.0 * local_y / (lookahead_distance_ * lookahead_distance_);
 }
