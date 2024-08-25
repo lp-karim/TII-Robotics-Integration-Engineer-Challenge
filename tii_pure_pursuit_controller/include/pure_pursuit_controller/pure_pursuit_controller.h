@@ -6,16 +6,20 @@
 #include <nav_msgs/Odometry.h>
 #include <geometry_msgs/Twist.h>
 #include <geometry_msgs/PoseStamped.h>
-#include <tf2_geometry_msgs/tf2_geometry_msgs.h>
+#include <tf2/LinearMath/Quaternion.h>  // Include for quaternion operations
+#include <tf2_geometry_msgs/tf2_geometry_msgs.h>  // Include for converting geometry messages
 
 class PurePursuitController {
 public:
     PurePursuitController(ros::NodeHandle& nh);
 
+private:
     void pathCallback(const nav_msgs::Path::ConstPtr& msg);
     void odometryCallback(const nav_msgs::Odometry::ConstPtr& msg);
+    void computeControlCommand();
+    double calculateSteeringAngle(const geometry_msgs::PoseStamped& target_pose);
+    geometry_msgs::PoseStamped getLookaheadPoint();
 
-private:
     ros::NodeHandle nh_;
     ros::Subscriber path_sub_;
     ros::Subscriber odom_sub_;
@@ -27,9 +31,6 @@ private:
     double lookahead_distance_;
     double max_linear_velocity_;
     double max_angular_velocity_;
-
-    void computeControlCommand();
-    geometry_msgs::PoseStamped getLookaheadPoint();
 };
 
-#endif  // PURE_PURSUIT_CONTROLLER_H
+#endif // PURE_PURSUIT_CONTROLLER_H
