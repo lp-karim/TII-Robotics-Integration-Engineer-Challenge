@@ -9,12 +9,13 @@ find_package(catkin REQUIRED COMPONENTS
   geometry_msgs
   tf2
   tf2_ros
+  tf2_geometry_msgs
 )
 
 catkin_package(
   INCLUDE_DIRS include
   LIBRARIES ${PROJECT_NAME}
-  CATKIN_DEPENDS roscpp std_msgs nav_msgs geometry_msgs tf2 tf2_ros
+  CATKIN_DEPENDS roscpp std_msgs nav_msgs geometry_msgs tf2 tf2_ros tf2_geometry_msgs
 )
 
 # Specify additional locations of header files
