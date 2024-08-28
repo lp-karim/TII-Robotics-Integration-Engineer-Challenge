@@ -1,44 +1,39 @@
 #ifndef PURE_PURSUIT_CONTROLLER_H
 #define PURE_PURSUIT_CONTROLLER_H
 
-#include <ros/ros.h>
-#include <nav_msgs/Path.h>
-#include <nav_msgs/Odometry.h>
-#include <geometry_msgs/Twist.h>
-#include <geometry_msgs/PoseStamped.h>
-#include <tf2/LinearMath/Quaternion.h>
-#include <tf2_geometry_msgs/tf2_geometry_msgs.h>
+#include "ros/ros.h"
+#include <vector>
+#include <cmath>
+#include <visualization_msgs/Marker.h>
+#include <visualization_msgs/MarkerArray.h>
+#include <limits>
+#include <tf/transform_listener.h>
 
-class PurePursuitController {
+struct Waypoint {
+    double x;
+    double y;
+    double yaw;
+
+    Waypoint(double x_, double y_, double yaw_)
+        : x(x_), y(y_), yaw(yaw_) {}
+};
+
+class PurePursuit {
 public:
-    PurePursuitController(ros::NodeHandle& nh);
+    PurePursuit(double lookahead_distance, double wheelbase, ros::Publisher& marker_pub);
+    double computeSteeringAngle(const Waypoint& current_position, const std::vector<Waypoint>& path);
 
 private:
-    void pathCallback(const nav_msgs::Path::ConstPtr& msg);
-    void odometryCallback(const nav_msgs::Odometry::ConstPtr& msg);
-    void computeControlCommand();
-    double calculateSteeringAngle(const geometry_msgs::PoseStamped& target_pose);
-    geometry_msgs::PoseStamped getLookaheadPoint();  // Updated to take no arguments
-    double adjustLookaheadDistance();  // Declaration of the new function
-    double calculateCurvature(const geometry_msgs::PoseStamped& pose1,  // Declaration of the curvature calculation function
-                              const geometry_msgs::PoseStamped& pose2, 
-                              const geometry_msgs::PoseStamped& pose3);
-
-    ros::NodeHandle nh_;
-    ros::Subscriber path_sub_;
-    ros::Subscriber odom_sub_;
-    ros::Publisher cmd_pub_;
-
-    nav_msgs::Path path_;
-    geometry_msgs::Pose current_pose_;
-    geometry_msgs::Twist current_velocity_;
-
-    double lookahead_distance_;
-    double min_lookahead_distance_ = 0.5;  // Example default value
-    double max_linear_velocity_;
-    double max_angular_velocity_;
-    double speed_factor_ = 0.1;  // Example default value
-    double curvature_factor_ = 1.0;  // Example default value
+    double lookahead_distance_ =6.0;
+    double wheelbase_=1.5;
+    double waypoint_reach_threshold_=0.05;
+    int current_waypoint_index_;
+    ros::Publisher& marker_pub_; 
+    tf::TransformListener tf_listener_;
+    int findTargetWaypointIndex(const Waypoint& current_position, const std::vector<Waypoint>& path);
+    double computeDistance(const Waypoint& p1, const Waypoint& p2);
+    void publishTargetWaypointMarker(const Waypoint& target_wp, int id);
+    Waypoint transformToVehicleFrame(const Waypoint& global_waypoint, const Waypoint& current_position);
 };
 
 #endif // PURE_PURSUIT_CONTROLLER_H
