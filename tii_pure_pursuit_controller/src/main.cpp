@@ -53,7 +53,7 @@ std::vector<Waypoint> loadWaypointsFromCSV(const std::string& filepath) {
 void publishPath(const std::vector<Waypoint>& waypoints, ros::Publisher& path_pub) {
     nav_msgs::Path path_msg;
     path_msg.header.stamp = ros::Time::now();
-    path_msg.header.frame_id = "base_footprint";  // Adjust the frame_id as per your setup
+    path_msg.header.frame_id = "base_footprint"; 
     
     for (const auto& wp : waypoints) {
         geometry_msgs::PoseStamped pose;
@@ -63,9 +63,8 @@ void publishPath(const std::vector<Waypoint>& waypoints, ros::Publisher& path_pu
         pose.pose.position.y = wp.y;
         pose.pose.position.z = 0;
         pose.pose.orientation.w = std::cos(wp.yaw / 2);
-        pose.pose.orientation.z = std::sin(wp.yaw / 2);  // Assuming 2D yaw
-        // ROS_INFO("Waypoint : orientation.w = %f, orientation.z = %f",
-        //          pose.pose.orientation.w, pose.pose.orientation.z);
+        pose.pose.orientation.z = std::sin(wp.yaw / 2); 
+        
         path_msg.poses.push_back(pose);
     }
 
@@ -73,32 +72,6 @@ void publishPath(const std::vector<Waypoint>& waypoints, ros::Publisher& path_pu
 }
 
 void odometryCallback(const nav_msgs::Odometry::ConstPtr& msg) {
-
-    // tf::StampedTransform transform;
-    // tf::TransformListener tf_listener;
-    // try {
-    //     tf_listener.lookupTransform("base_link", "base_footprint", ros::Time(0), transform);
-
-    //     // Transform odometry data to the "map" frame
-    //     tf::Vector3 origin = transform.getOrigin();
-    //     tf::Quaternion rotation = transform.getRotation();
-
-    //     // Update your current_position using transformed data
-    //     current_position.x = msg->pose.pose.position.x + origin.x();
-    //     current_position.y = msg->pose.pose.position.y + origin.y();
-
-    //     // Handle yaw with rotation
-    //     double siny_cosp = 2 * (rotation.w() * rotation.z() + rotation.x() * rotation.y());
-    //     double cosy_cosp = 1 - 2 * (rotation.y() * rotation.y() + rotation.z() * rotation.z());
-    //     current_position.yaw = std::atan2(siny_cosp, cosy_cosp);
-
-    // } catch (tf::TransformException &ex) {
-    //     ROS_ERROR("%s", ex.what());
-    // }
-
-
-    // // Log the frame ID
-    // ROS_INFO("Odometry frame ID: %s", msg->header.frame_id.c_str());
 
     // Extract the position and orientation (yaw) from the odometry message
     current_position.x = msg->pose.pose.position.x;
@@ -112,8 +85,8 @@ void odometryCallback(const nav_msgs::Odometry::ConstPtr& msg) {
     current_position.yaw = std::atan2(siny_cosp, cosy_cosp);
 
     // Log the current position and yaw for debugging
-    // ROS_INFO("Current position: x = %f, y = %f, z = %f, yaw = %f",
-    //          current_position.x, current_position.y, current_position.z, current_position.yaw);
+    ROS_INFO("Current position: x = %f, y = %f, yaw = %f",
+             current_position.x, current_position.y, current_position.yaw);
 
 }
 
@@ -141,17 +114,6 @@ void printWaypoints(const std::vector<Waypoint>& waypoints) {
     }
 }
 
-std::vector<Waypoint> createSimplifiedPath() {
-    std::vector<Waypoint> path;
-    path.push_back(Waypoint(5.0, 0.0, 0.0));   // Straight ahead 5 meters
-    path.push_back(Waypoint(0.0, 0.0, 0.0));   // Start point
-    path.push_back(Waypoint(10.0, 2.0, 0.0));  // Slight right turn, 5 meters ahead, 2 meters to the right
-    path.push_back(Waypoint(15.0, 5.0, 0.0));  // Continue to the right
-    path.push_back(Waypoint(20.0, 5.0, 0.0));  // Straight ahead 5 meters on the new heading
-    path.push_back(Waypoint(25.0, 2.0, 0.0));  // Start turning back to the left
-    path.push_back(Waypoint(30.0, 0.0, 0.0));  // Finish with a straight section
-    return path;
-}
 
 // Function to transform waypoints relative to the vehicle's position
 std::vector<Waypoint> transformGlobalPathToVehicleFrame(const std::vector<Waypoint>& global_path, const Waypoint& current_position) {
@@ -219,21 +181,16 @@ int main(int argc, char** argv) {
 
     ros::Rate loop_rate(10);  // 10 Hz
 
-    // Publish the path once
-
     while (ros::ok()) {
         if (!global_path.empty()) {
     
             // Transform the global path into the vehicle's coordinate frame
             std::vector<Waypoint> transformed_path = transformGlobalPathToVehicleFrame(global_path, current_position);
 
-
-            ROS_INFO("current posiion: x = %f, y = %f",
-                 current_position.x, current_position.y);
-
             double steering_angle = pure_pursuit.computeSteeringAngle(current_position, transformed_path);
 
             publishPath(global_path, path_pub);
+            
             // Create and publish the Twist message
             geometry_msgs::Twist cmd_msg;
             cmd_msg.linear.x = 1.0;  // Example speed, adjust as needed
