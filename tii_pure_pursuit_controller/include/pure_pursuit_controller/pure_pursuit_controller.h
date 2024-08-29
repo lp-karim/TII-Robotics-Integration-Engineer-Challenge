@@ -13,6 +13,9 @@ struct Waypoint {
     double x;
     double y;
     double yaw;
+    
+    // Default constructor
+    Waypoint() : x(0.0), y(0.0), yaw(0.0) {}
 
     Waypoint(double x_, double y_, double yaw_)
         : x(x_), y(y_), yaw(yaw_) {}
