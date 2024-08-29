@@ -10,31 +10,8 @@ PathTrackingPlanner::PathTrackingPlanner(ros::NodeHandle& nh)
     {
     odom_sub_ = nh.subscribe("/gem/base_footprint/odom", 10, &PathTrackingPlanner::odometryCallback, this);
     path_sub_ = nh.subscribe("/gem/path", 10, &PathTrackingPlanner::pathCallback, this);
-
-    // std::string waypoints_file = "/root/catkin_ws/src/tii_pure_pursuit_controller/waypoint_examples/curved_waypoints.csv";
-    // nh_.param<std::string>("waypoints_file", waypoints_file, waypoints_file);
-
-    // global_path_ = loadWaypointsFromCSV(waypoints_file);
 }
 
-// void PathTrackingPlanner::run() {
-//     ros::Rate loop_rate(10);  // 10 Hz
-//     while (ros::ok()) {
-//         if (!global_path_.empty()) {
-//             std::vector<Waypoint> transformed_path = transformGlobalPathToVehicleFrame(global_path_, current_position_);
-//             double steering_angle = pure_pursuit_.computeSteeringAngle(current_position_, transformed_path);
-//             publishPath(global_path_, path_pub_);
-
-//             geometry_msgs::Twist cmd_msg;
-//             cmd_msg.linear.x = 1.0;  // Example speed, adjust as needed
-//             cmd_msg.angular.z = steering_angle;
-
-//             cmd_pub_.publish(cmd_msg);
-//         }
-//         ros::spinOnce();
-//         loop_rate.sleep();
-//     }
-// }
 
 std::vector<Waypoint> PathTrackingPlanner::loadWaypointsFromCSV(const std::string& file_path) {
     std::vector<Waypoint> waypoints;
@@ -82,8 +59,8 @@ void PathTrackingPlanner::odometryCallback(const nav_msgs::Odometry::ConstPtr& m
     m.getRPY(roll, pitch, yaw);
     current_position.yaw = yaw;
     // Log the current position and yaw for debugging
-    ROS_INFO("Current position: x = %f, y = %f, yaw = %f",
-             current_position.x, current_position.y, current_position.yaw);
+    // ROS_INFO("Current position: x = %f, y = %f, yaw = %f",
+    //          current_position.x, current_position.y, current_position.yaw);
 
 }
 
@@ -135,8 +112,8 @@ void PathTrackingPlanner::publishPath(const std::vector<Waypoint>& path, ros::Pu
         pose.pose.orientation.w = std::cos(wp.yaw / 2);
         pose.pose.orientation.z = std::sin(wp.yaw / 2);
         ros_path.poses.push_back(pose);
-        ROS_INFO("Waypoint : orientation.w = %f, orientation.z = %f",
-                 pose.pose.orientation.w, pose.pose.orientation.z);
+        // ROS_INFO("Waypoint : orientation.w = %f, orientation.z = %f",
+        //          pose.pose.orientation.w, pose.pose.orientation.z);
         
     }
 
