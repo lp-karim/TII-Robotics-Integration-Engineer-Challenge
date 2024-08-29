@@ -4,7 +4,7 @@
 
 PurePursuit::PurePursuit(double lookahead_distance, double wheelbase, ros::Publisher& marker_pub)
     : lookahead_distance_(lookahead_distance), wheelbase_(wheelbase), marker_pub_(marker_pub),
-    current_waypoint_index_(0), waypoint_reach_threshold_(0.05) {}
+    current_waypoint_index_(0), waypoint_reach_threshold_(1.0) {}
 
 std::pair<double, int> PurePursuit::computeSteeringAngle(const Waypoint& current_position, const std::vector<Waypoint>& path) {
     int target_index = findTargetWaypointIndex(current_position, path);
