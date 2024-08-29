@@ -3,7 +3,10 @@ set -e
 
 # Source the ROS setup
 source /opt/ros/noetic/setup.bash
-
+# Building Gtest
+cd /usr/src/googletest
+sudo cmake .
+sudo cmake --build . --target install
 # Ensure the workspace directory is set up correctly
 WORKSPACE_DIR="/root/catkin_ws"
 
