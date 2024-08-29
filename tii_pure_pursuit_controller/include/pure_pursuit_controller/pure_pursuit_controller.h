@@ -24,7 +24,7 @@ struct Waypoint {
 class PurePursuit {
 public:
     PurePursuit(double lookahead_distance, double wheelbase, ros::Publisher& marker_pub);
-    double computeSteeringAngle(const Waypoint& current_position, const std::vector<Waypoint>& path);
+    std::pair<double, int> computeSteeringAngle(const Waypoint& current_position, const std::vector<Waypoint>& path);
 
 private:
     double lookahead_distance_ =6.0;
