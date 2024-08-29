@@ -1,11 +1,12 @@
 #include "pure_pursuit_controller/pure_pursuit_controller.h"
 #include "ros/ros.h"
+#include <utility>
 
 PurePursuit::PurePursuit(double lookahead_distance, double wheelbase, ros::Publisher& marker_pub)
     : lookahead_distance_(lookahead_distance), wheelbase_(wheelbase), marker_pub_(marker_pub),
-    current_waypoint_index_(0), waypoint_reach_threshold_(0.5) {}
+    current_waypoint_index_(0), waypoint_reach_threshold_(0.05) {}
 
-double PurePursuit::computeSteeringAngle(const Waypoint& current_position, const std::vector<Waypoint>& path) {
+std::pair<double, int> PurePursuit::computeSteeringAngle(const Waypoint& current_position, const std::vector<Waypoint>& path) {
     int target_index = findTargetWaypointIndex(current_position, path);
     Waypoint target_wp = path[target_index];
 
@@ -30,10 +31,10 @@ double PurePursuit::computeSteeringAngle(const Waypoint& current_position, const
 
     // Calculate the steering angle delta
     double delta = std::atan2(2.0 * wheelbase_ * std::sin(alpha) / lookahead_distance_, 1.0);
-    delta *= 0.7;  // Scaling down to reduce aggressiveness
+    delta *= 1.0;  // 0.7 // Scaling down to reduce aggressiveness
     ROS_INFO("Computed Steering Angle: %f", delta);
     
-    return delta;
+    return std::make_pair(delta, target_index);
 }
 
 int PurePursuit::findTargetWaypointIndex(const Waypoint& current_position, const std::vector<Waypoint>& path) {
