@@ -65,7 +65,7 @@ void StateMachine::handlePathFollowingState(std::vector<Waypoint>& global_path_)
     waypoint_index = result.second;
 
     // Publish the command
-    cmd_msg.linear.x = 1.0;  // 1.0
+    cmd_msg.linear.x = 2.0;  // 1.0
     cmd_msg.angular.z = steering_angle;
 
     cmd_pub_.publish(cmd_msg);
@@ -92,4 +92,8 @@ bool StateMachine::isPathCompleted() {
     // This could be based on the distance to the last waypoint or some other condition
     // Placeholder logic:
     // return global_path_.size() == 1;  // Example condition
+}
+
+VehicleState StateMachine::getCurrentState() const {
+    return current_state_;
 }
