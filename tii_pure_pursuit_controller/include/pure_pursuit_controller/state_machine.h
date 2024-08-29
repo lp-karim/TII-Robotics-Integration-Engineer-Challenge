@@ -26,6 +26,7 @@ public:
     StateMachine(PurePursuit& controller, PathTrackingPlanner& planner, std::string& waypoints_file);
 
     void run(std::vector<Waypoint>& global_path_);  // Main loop for the state machine
+    VehicleState getCurrentState() const; 
 
 private:
     VehicleState current_state_;
