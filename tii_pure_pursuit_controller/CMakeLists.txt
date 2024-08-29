@@ -15,6 +15,11 @@ catkin_package(
   CATKIN_DEPENDS roscpp std_msgs nav_msgs visualization_msgs tf
 )
 
+catkin_add_gtest(target
+  test/test_pure_pursuit.cpp
+  test/test_state_machine.cpp
+)
+
 include_directories(
   include
   ${catkin_INCLUDE_DIRS}
@@ -27,3 +32,9 @@ add_dependencies(${PROJECT_NAME}_node ${${PROJECT_NAME}_EXPORTED_TARGETS} ${catk
 target_link_libraries(${PROJECT_NAME}_node
   ${catkin_LIBRARIES}
 )
+
+# Enable testing
+if(CATKIN_ENABLE_TESTING)
+  find_package(rostest REQUIRED)
+  add_subdirectory(test)
+endif()
