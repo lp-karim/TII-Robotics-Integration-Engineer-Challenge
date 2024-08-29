@@ -21,6 +21,8 @@ RUN apt-get update && apt-get install -y \
     ros-noetic-velodyne-simulator \
     ros-noetic-roscpp \
     ros-noetic-std-msgs \ 
+    libgmock-dev \
+    libgtest-dev
     ros-noetic-tf2 \
     && rm -rf /var/lib/apt/lists/*
 
