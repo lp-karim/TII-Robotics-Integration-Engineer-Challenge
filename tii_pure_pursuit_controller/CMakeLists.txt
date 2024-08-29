@@ -20,7 +20,7 @@ include_directories(
   ${catkin_INCLUDE_DIRS}
 )
 
-add_executable(pure_pursuit_controller_node src/main.cpp src/pure_pursuit_controller.cpp src/frame_id_remapper.cpp)
+add_executable(pure_pursuit_controller_node src/main.cpp src/pure_pursuit_controller.cpp src/frame_id_remapper.cpp src/path_tracking_planner.cpp)
 
 add_dependencies(${PROJECT_NAME}_node ${${PROJECT_NAME}_EXPORTED_TARGETS} ${catkin_EXPORTED_TARGETS})
 
