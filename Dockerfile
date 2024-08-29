@@ -22,7 +22,7 @@ RUN apt-get update && apt-get install -y \
     ros-noetic-roscpp \
     ros-noetic-std-msgs \ 
     libgmock-dev \
-    libgtest-dev
+    libgtest-dev \
     ros-noetic-tf2 \
     && rm -rf /var/lib/apt/lists/*
 
