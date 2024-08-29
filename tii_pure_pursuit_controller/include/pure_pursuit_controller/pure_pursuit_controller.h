@@ -29,7 +29,7 @@ public:
 private:
     double lookahead_distance_ =6.0;
     double wheelbase_=1.5;
-    double waypoint_reach_threshold_=0.05;
+    double waypoint_reach_threshold_=1.0;
     int current_waypoint_index_;
     ros::Publisher& marker_pub_; 
     tf::TransformListener tf_listener_;
