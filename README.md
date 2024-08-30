@@ -38,7 +38,7 @@ In this section, we showcase the path and position in RViz, using a red marker t
 
 Here, we demonstrate the vehicle following the path in the Gazebo simulation environment. The video shows the vehicle moving along the predefined path, successfully reaching the destination.
 
-[![Gazebo Simulation Video](path_to_video_thumbnail.png)](path_to_gazebo_video.mp4)
+[![Gazebo Simulation Video](POLARIS_GEM_e2-main/images/simple_track_gazebo.png)](media/pure_pursuit_path_tracking_001_2024年08月30日.webm)
 
 *Figure 2: Gazebo simulation showing the vehicle following the path.*
 
