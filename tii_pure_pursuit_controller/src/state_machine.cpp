@@ -43,37 +43,40 @@ void StateMachine::handleIdleState(std::vector<Waypoint>& global_path_) {
 }
 
 void StateMachine::handlePathFollowingState(std::vector<Waypoint>& global_path_) {
-    // ANSI escape code for Blue
-    const std::string reset   = "\033[0m";
-    const std::string blue    = "\033[34m";
-    ROS_INFO("%sState: PathFollowing. Tracking the path...%s",blue.c_str(), reset.c_str());
-    
-    // Compute the steering angle
-    std::pair<double, int> result = controller_.computeSteeringAngle(planner_.getCurrentPosition(), global_path_);
-    double steering_angle = result.first;
-    waypoint_index = result.second;
+    if ((remaing_waypoint - waypoint_index ) >  20)   {
+        // ANSI escape code for Blue
+        const std::string reset   = "\033[0m";
+        const std::string blue    = "\033[34m";
+        ROS_INFO("%sState: PathFollowing. Tracking the path...%s",blue.c_str(), reset.c_str());
+        
+        // Compute the steering angle
+        std::pair<double, int> result = controller_.computeSteeringAngle(planner_.getCurrentPosition(), global_path_);
+        double steering_angle = result.first;
+        waypoint_index = result.second;
 
-    // Publish the command
-    cmd_msg.linear.x = 3.0;  // 1.0
-    cmd_msg.angular.z = steering_angle;
+        // Publish the command
+        cmd_msg.linear.x = 3.0;  // 1.0
+        cmd_msg.angular.z = steering_angle;
 
-    cmd_pub_.publish(cmd_msg);
+        cmd_pub_.publish(cmd_msg);
+    }
     // If the vehicle has reached the last waypoint, transition to Completed state
-    if (remaing_waypoint <  1) {
+    else  {
+        global_path_.clear();
         // ANSI escape code for Green
         const std::string reset   = "\033[0m";
         const std::string green   = "\033[32m";
         ROS_INFO("%sReached the last waypoint. Transitioning to Completed state.%s",green.c_str(), reset.c_str());
         current_state_ = VehicleState::Completed;
         return;
-    } else {
-        remaing_waypoint -= 1;
-        ROS_INFO("Remaining Waypoints: %d", remaing_waypoint);
     }
+    ROS_INFO("Remaining Waypoints: %d", (remaing_waypoint - waypoint_index ));
+    //  else {
+    //     remaing_waypoint -= waypoint_index;
+    // }
 }
 
 void StateMachine::handleCompletedState(std::vector<Waypoint>& global_path_) {
-    global_path_.clear();
     // ANSI escape code for Green
     const std::string reset   = "\033[0m";
     const std::string green   = "\033[32m";
