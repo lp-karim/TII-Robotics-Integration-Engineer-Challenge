@@ -23,7 +23,7 @@ enum class VehicleState {
 
 class StateMachine {
 public:
-    StateMachine(PurePursuit& controller, PathTrackingPlanner& planner, std::string& waypoints_file);
+    StateMachine(PurePursuit& controller, PathTrackingPlanner& planner, std::string& waypoints_file, std::vector<Waypoint>& global_path_);
 
     void run(std::vector<Waypoint>& global_path_);  // Main loop for the state machine
     VehicleState getCurrentState() const; 
@@ -41,15 +41,15 @@ private:
     ros::Publisher marker_pub_;
     // std::string waypoints_file = "/root/catkin_ws/src/POLARIS_GEM_e2-main/polaris_gem_drivers_sim/gem_pure_pursuit_sim/waypoints/wps.csv";
     int waypoint_index = 0;
+    int remaing_waypoint = 0;
     geometry_msgs::Twist cmd_msg;
     
 
 
     void handleIdleState(std::vector<Waypoint>& global_path_);
     void handlePathFollowingState(std::vector<Waypoint>& global_path_);
-    void handleCompletedState();
+    void handleCompletedState(std::vector<Waypoint>& global_path_);
 
-    bool isPathCompleted();  // Helper function to check if the path is completed
 };
 
 #endif // STATE_MACHINE_H
