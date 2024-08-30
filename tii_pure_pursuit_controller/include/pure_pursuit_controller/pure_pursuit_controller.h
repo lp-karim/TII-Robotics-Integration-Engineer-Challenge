@@ -36,7 +36,9 @@ private:
     int findTargetWaypointIndex(const Waypoint& current_position, const std::vector<Waypoint>& path);
     double computeDistance(const Waypoint& p1, const Waypoint& p2);
     void publishTargetWaypointMarker(const Waypoint& target_wp, int id);
-    Waypoint transformToVehicleFrame(const Waypoint& global_waypoint, const Waypoint& current_position);
+    double find_angle(const std::vector<double>& v1, const std::vector<double>& v2);
+    double dot_product(const std::vector<double>& v1, const std::vector<double>& v2);
+    double magnitude(const std::vector<double>& v);
 };
 
 #endif // PURE_PURSUIT_CONTROLLER_H
