@@ -55,7 +55,7 @@ void StateMachine::handlePathFollowingState(std::vector<Waypoint>& global_path_)
         waypoint_index = result.second;
 
         // Publish the command
-        cmd_msg.linear.x = 3.0;  // 1.0
+        cmd_msg.linear.x = 2.5;  // 1.0
         cmd_msg.angular.z = steering_angle;
 
         cmd_pub_.publish(cmd_msg);
