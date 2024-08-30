@@ -30,7 +30,6 @@ private:
 
     void odometryCallback(const nav_msgs::Odometry::ConstPtr& msg);
     void pathCallback(const nav_msgs::Path::ConstPtr& msg);
-    Waypoint transformToVehicleFrame(const Waypoint& global_waypoint, const Waypoint& current_position);
 
 
 };

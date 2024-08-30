@@ -58,9 +58,6 @@ void PathTrackingPlanner::odometryCallback(const nav_msgs::Odometry::ConstPtr& m
     double roll, pitch, yaw;
     m.getRPY(roll, pitch, yaw);
     current_position.yaw = yaw;
-    // Log the current position and yaw for debugging
-    // ROS_INFO("Current position: x = %f, y = %f, yaw = %f",
-    //          current_position.x, current_position.y, current_position.yaw);
 
 }
 
@@ -74,8 +71,6 @@ void PathTrackingPlanner::pathCallback(const nav_msgs::Path::ConstPtr& msg) {
                     0.0); // Yaw will be calculated or provided separately
         global_path.push_back(wp);
     }
-
-    ROS_INFO("Path received with %lu waypoints", global_path.size());
 
 }
 
@@ -112,28 +107,8 @@ void PathTrackingPlanner::publishPath(const std::vector<Waypoint>& path, ros::Pu
         pose.pose.orientation.w = std::cos(wp.yaw / 2);
         pose.pose.orientation.z = std::sin(wp.yaw / 2);
         ros_path.poses.push_back(pose);
-        // ROS_INFO("Waypoint : orientation.w = %f, orientation.z = %f",
-        //          pose.pose.orientation.w, pose.pose.orientation.z);
-        
+    
     }
 
     path_pub.publish(ros_path);
-}
-
-Waypoint PathTrackingPlanner::transformToVehicleFrame(const Waypoint& global_waypoint, const Waypoint& current_position) {
-    // Translate the waypoint relative to the vehicle's position
-    double dx = global_waypoint.x - current_position.x;
-    double dy = global_waypoint.y - current_position.y;
-
-    // Rotate the waypoint relative to the vehicle's orientation (yaw)
-    double cos_yaw = std::cos(-current_position.yaw);
-    double sin_yaw = std::sin(-current_position.yaw);
-
-    double transformed_x = cos_yaw * dx - sin_yaw * dy;
-    double transformed_y = sin_yaw * dx + cos_yaw * dy;
-
-    // The yaw remains the difference in heading direction
-    double transformed_yaw = global_waypoint.yaw - current_position.yaw;
-
-    return Waypoint(transformed_x, transformed_y, transformed_yaw);
 }
