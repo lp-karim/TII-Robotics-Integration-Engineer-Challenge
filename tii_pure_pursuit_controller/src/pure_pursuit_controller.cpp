@@ -31,7 +31,7 @@ std::pair<double, int> PurePursuit::computeSteeringAngle(const Waypoint& current
     ROS_INFO("Alpha (angle to target): %f", alpha);
     // Dynamic LookAhead Distance
     lookahead_distance_ = computeDistance(current_position, target_wp);
-    ROS_INFO("True LookAhead distance: %f", lookahead_distance_);
+    ROS_INFO("Dynamic LookAhead distance: %f", lookahead_distance_);
     // Calculate the steering angle delta
     double k       = 0.285;
     double delta = std::atan2(2.0 * k * wheelbase_ * std::sin(alpha) / lookahead_distance_, 1.0);
