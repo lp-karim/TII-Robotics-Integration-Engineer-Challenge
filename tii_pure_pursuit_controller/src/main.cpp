@@ -36,22 +36,19 @@ int main(int argc, char** argv) {
     nh.param<std::string>("output_topic", output_topic, output_topic);
     nh.param<std::string>("new_frame_id", new_frame_id, new_frame_id);
 
-    // ROS_INFO("Input Topic: %s", input_topic.c_str());
-    // ROS_INFO("Output Topic: %s", output_topic.c_str());
-    // ROS_INFO("New Frame ID: %s", new_frame_id.c_str());
+    FrameIdRemapper Velodyne_remapper(nh, input_topic, output_topic, new_frame_id);
 
-    FrameIdRemapper remapper(nh, input_topic, output_topic, new_frame_id);
-
-    PurePursuit pure_pursuit(2.0, 1.5, marker_pub);
+    PurePursuit pure_pursuit(6.0, 1.5, marker_pub);
     PathTrackingPlanner planner(nh);
-    StateMachine state_machine(pure_pursuit,planner,waypoints_file_);
-
     global_path_ = planner.loadWaypointsFromCSV(waypoints_file_);
+    planner.publishPath(global_path_, path_pub_);
+
+    StateMachine state_machine(pure_pursuit,planner,waypoints_file_,global_path_);
 
     ros::Rate loop_rate(10);
 
     while (ros::ok()) {
-        state_machine.run(global_path_);  // Run the state machine to handle the robot's behavior
+        state_machine.run(global_path_);  // Run the state machine to handle the vehicle's behavior
 
         ros::spinOnce();
         loop_rate.sleep();
