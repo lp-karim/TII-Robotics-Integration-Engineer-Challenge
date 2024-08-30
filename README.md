@@ -1,16 +1,46 @@
-# TII-Robotics-Integration-Engineer-Challenge
+# TII-vehicleics-Integration-Engineer-Challenge
 ## ROS Path-Tracking Controller with State Machine
 
 This project implements a ROS-based path-tracking controller using a Pure Pursuit algorithm and a navigation state machine. The project is containerized using Docker, with separate development and production environments managed via Docker Compose.
 
-## Features
 
-- **Path-Tracking Controller**: Implements a Pure Pursuit algorithm to follow a specified path.
-- **State Machine**: Manages robot states, including Idle, Path Following, and Completed.
-- **Docker Compose**: Two containers:
-  - **dev**: For building and developing the ROS package.
-  - **app**: For running the compiled ROS application.
-- **X11 Forwarding**: Supports running GUI applications like RViz within the Docker containers.
+
+## Design Choices and Architecture
+
+### 1. **Path-Tracking Algorithm**
+
+The Pure Pursuit algorithm was chosen for its simplicity and effectiveness in path-following scenarios. It computes a steering angle to keep the vehicle on a predefined path by constantly aiming at a target point ahead of the vehicle. The algorithm is well-suited for real-time applications, making it a robust choice for this project.
+
+- **Key Components**:
+  - **Waypoint Transformation**: Transforms global waypoints into the vehicle's coordinate frame to ensure accurate path tracking.
+  - **Steering Angle Calculation**: Computes the steering angle based on the target waypoint and the vehicle’s current position and orientation.
+
+### 2. **State Machine**
+
+The state machine is designed to manage different operational states of the vehicle, such as "Idle," "Path Following," and "Completed." The use of a state machine adds robustness to the system by clearly defining behaviors for each state and ensuring smooth transitions between them.
+
+- **Key States**:
+  - **Idle**: The vehicle waits for a path or command.
+  - **Path Following**: The vehicle actively follows the path using the Pure Pursuit controller.
+  - **Completed**: The vehicle stops following the path once it has reached the end.
+
+## Results
+
+### 1. **RViz Visualization**
+
+In this section, we showcase the path and position in RViz, using a red marker to represent the vehicle’s current location.
+
+![RViz Path Visualization](path_to_rviz_gif.gif)
+
+*Figure 1: RViz visualization showing the vehicle's path and its position.*
+
+### 2. **Gazebo Simulation**
+
+Here, we demonstrate the vehicle following the path in the Gazebo simulation environment. The video shows the vehicle moving along the predefined path, successfully reaching the destination.
+
+[![Gazebo Simulation Video](path_to_video_thumbnail.png)](path_to_gazebo_video.mp4)
+
+*Figure 2: Gazebo simulation showing the vehicle following the path.*
 
 ## Prerequisites
 
@@ -23,8 +53,8 @@ This project implements a ROS-based path-tracking controller using a Pure Pursui
 ### 1. Clone the Repository
 
 ```bash
-git clone https://github.com/lp-karim/TII-Robotics-Integration-Engineer-Challenge
-cd TII-Robotics-Integration-Engineer-Challenge
+git clone https://github.com/lp-karim/TII-vehicleics-Integration-Engineer-Challenge
+cd TII-vehicleics-Integration-Engineer-Challenge
 ```
 
 ### 2. Build the Docker Containers
@@ -43,8 +73,6 @@ Make sure to expose your X11 socket to be able to Rviz and Gazebo:
 
 xhost +local:docker
 ```
-## Achievements
-
 
 ## Further Development
 
