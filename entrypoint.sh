@@ -3,7 +3,10 @@ set -e
 
 # Source the ROS setup
 source /opt/ros/noetic/setup.bash
-
+# Building Gtest
+cd /usr/src/googletest
+sudo cmake .
+sudo cmake --build . --target install
 # Ensure the workspace directory is set up correctly
 WORKSPACE_DIR="/root/catkin_ws"
 
@@ -22,7 +25,8 @@ if [ ! -f "$WORKSPACE_DIR/src/CMakeLists.txt" ]; then
 fi
 
 # Build the catkin workspace
-catkin_make
+# catkin_make
+catkin_make --make-args VERBOSE=1
 
 # Source the workspace setup
 source $WORKSPACE_DIR/devel/setup.bash
@@ -35,6 +39,6 @@ echo "Container is ready and running. You are now in the bash shell."
 
 # Start an interactive bash shell
 # exec bash
-source devel/setup.bash && roslaunch gem_gazebo gem_gazebo_rviz.launch velodyne_points:="true"
+# source devel/setup.bash && roslaunch gem_gazebo gem_gazebo_rviz.launch velodyne_points:="true"
 
 tail -f /dev/null   

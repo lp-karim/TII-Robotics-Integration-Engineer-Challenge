@@ -1,0 +1,4 @@
+<launch>
+    <test test-name="state_machine_test" pkg="pure_pursuit_controller" type="test_state_machine" time-limit="60" />
+
+</launch>

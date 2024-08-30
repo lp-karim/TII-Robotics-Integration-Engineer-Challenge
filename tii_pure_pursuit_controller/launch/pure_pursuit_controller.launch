@@ -1,0 +1,8 @@
+<launch>
+    <!-- Load parameters from a YAML file -->
+    <rosparam file="$(find pure_pursuit_controller)/config/pure_pursuit_params.yaml" command="load" />
+    <param name="waypoints_file" value="/root/catkin_ws/src/POLARIS_GEM_e2-main/polaris_gem_drivers_sim/gem_pure_pursuit_sim/waypoints/wps.csv"/>
+    
+    <!-- Start the Pure Pursuit controller node -->
+    <node name="pure_pursuit_controller" pkg="pure_pursuit_controller" type="pure_pursuit_controller_node" output="screen" />
+</launch>
