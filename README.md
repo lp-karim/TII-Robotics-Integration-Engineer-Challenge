@@ -30,7 +30,7 @@ The state machine is designed to manage different operational states of the vehi
 
 In this section, we showcase the path and position in RViz, using a red marker to represent the vehicle’s current location.
 
-![RViz Path Visualization](path_to_rviz_gif.gif)
+[![RViz Path Visualization](media/realTime_pathTracking_Rviz_2024年08月31日.png)](media/pure_pursuit_path_tracking_001_2024年08月30日.webm)
 
 *Figure 1: RViz visualization showing the vehicle's path and its position.*
 
@@ -59,19 +59,29 @@ cd TII-vehicleics-Integration-Engineer-Challenge
 
 ### 2. Build the Docker Containers
 
-Use Docker Compose to build the containers:
-
-```bash
-
-docker compose up --build -d
-```
-### 3. Running GUI Applications
-
 Make sure to expose your X11 socket to be able to Rviz and Gazebo:
 
 ```bash
-
 xhost +local:docker
+```
+Use Docker Compose to build the containers:
+
+```bash
+docker compose up --build -d
+```
+### 3. Running The Simulation
+
+Access the container with bash:
+
+```bash
+docker exec -it ros_dev_container bash
+```
+Run the Gem Gazebo Rviz Launch file:
+
+**Note: the path tracking node was integrated in this launch file**
+
+```bash
+roslaunch gem_gazebo gem_gazebo_rviz.launch velodyne_points:="true"
 ```
 
 ## Further Development
